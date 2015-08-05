@@ -1,0 +1,44 @@
+<launch>
+  <!--
+    Push the left frontal button labeled as 'LB' to activate cmd_vel publishing.
+    Move the left stick around to control the velocity.
+   -->
+  <!--  smooths inputs from cmd_vel_mux/input/teleop_raw to cmd_vel_mux/input/teleop -->
+  <include file="$(find jetsonbot_teleop)/launch/includes/velocity_smoother.launch.xml"/>
+
+  <!-- Add output="screen" to this node for info messages -->
+  <node pkg="jetsonbot_teleop" type="jetsonbot_teleop_joy" name="jetsonbot_teleop_joystick">
+    <param name="scale_angular" value="1.5"/>
+    <param name="scale_linear" value="0.5"/>
+    <param name="axis_deadman" value="4"/>
+    <param name="axis_linear" value="1"/>
+    <param name="axis_angular" value="0"/>
+    <!-- Assign Button numbers to their hardware values -->
+    <param name="button_a" value="0"/>
+    <param name="button_b" value="1"/>
+    <param name="button_x" value="3"/>
+    <!-- button y is mapped to the deadman -->
+    <!-- buttons left and right are located by the triggers -->
+    <param name="button_left" value="6"/>
+    <param name="button_right" value="7"/>
+    <param name="button_app" value="11"/>
+    <!-- Assign sounds to buttons -->
+    <param name="buttonASound" value="/home/ubuntu/jetsonbot/sounds/R2D2Sounds/gen-3.wav" />
+    <param name="buttonBSound" value="/home/ubuntu/jetsonbot/sounds/R2D2Sounds/happy-1.wav" />
+    <param name="buttonXSound" value="/home/ubuntu/jetsonbot/sounds/StayinInBlack.wav" />
+    <param name="buttonRightSound" value="/home/ubuntu/jetsonbot/sounds/R2D2Sounds/sad-3.wav" />
+    <param name="buttonAppSoundOn"  value="/home/ubuntu/jetsonbot/sounds/StartupSounds/BritMale/FollowingEngaged.wav" />
+    <param name="buttonAppSoundOff" value="/home/ubuntu/jetsonbot/sounds/StartupSounds/BritMale/DisengageFollowing.wav" />
+    <!-- Cross controller; 2 axis, values 0, 32767 or -32767 -->
+    <param name="crossAxisHorizontal" value="6" />
+    <param name="crossAxisVertical" value="7" />
+    <!-- Triggers -->
+    <param name="leftTrigger" value="5" />
+    <param name="rightTrigger" value="4" />
+
+    <remap from="jetsonbot_teleop_joystick/cmd_vel" to="teleop_velocity_smoother/raw_cmd_vel"/>
+  </node>
+
+  <node pkg="joy" type="joy_node" name="joystick"/>
+
+</launch>
